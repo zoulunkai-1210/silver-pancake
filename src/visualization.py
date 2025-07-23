@@ -18,6 +18,12 @@ class Visualizer:
 
     def plot_displacement_contour(self, xi, yi, zi, title, filename, displacement_type='位移', unit='mm',
                                  levels=None, vmin=None, vmax=None, contour_lines=10):
+        print("config.CONTOUR_LEVELS =", config.CONTOUR_LEVELS, type(config.CONTOUR_LEVELS))
+        print("contour_lines =", contour_lines, type(contour_lines))
+        if not (isinstance(config.CONTOUR_LEVELS, int) or isinstance(config.CONTOUR_LEVELS, (list, np.ndarray))):
+            raise TypeError(f"config.CONTOUR_LEVELS 类型错误: {type(config.CONTOUR_LEVELS)}")
+        if not (isinstance(contour_lines, int) or isinstance(contour_lines, (list, np.ndarray))):
+            raise TypeError(f"contour_lines 类型错误: {type(contour_lines)}")
         if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
             levels = np.linspace(vmin, vmax, N)
