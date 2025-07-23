@@ -18,8 +18,12 @@ class Visualizer:
 
     def plot_displacement_contour(self, xi, yi, zi, title, filename, displacement_type='位移', unit='mm',
                                  levels=None, vmin=None, vmax=None, contour_lines=10):
-        if levels is None:
-            levels = config.CONTOUR_LEVELS
+        if vmin is not None and vmax is not None:
+            N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
+            levels = np.linspace(vmin, vmax, N) if levels is None else np.linspace(vmin, vmax, len(levels))
+        else:
+            if levels is None:
+                levels = config.CONTOUR_LEVELS
         fig, ax = plt.subplots(figsize=config.FIGURE_SIZE, dpi=config.DPI)
         contour = ax.contourf(xi, yi, zi, levels=levels, cmap=config.COLORMAP, vmin=vmin, vmax=vmax)
         contour_lines_obj = ax.contour(xi, yi, zi, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
@@ -32,8 +36,6 @@ class Visualizer:
         cax = divider.append_axes("right", size="5%", pad=0.1)
         cbar = plt.colorbar(contour, cax=cax)
         cbar.set_label(f'{displacement_type} ({unit})', fontproperties=my_font)
-        if vmin is not None and vmax is not None:
-            cbar.set_clim(vmin, vmax)
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
             plt.savefig(save_path, dpi=config.DPI, bbox_inches='tight')
