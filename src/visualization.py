@@ -32,6 +32,8 @@ class Visualizer:
         cax = divider.append_axes("right", size="5%", pad=0.1)
         cbar = plt.colorbar(contour, cax=cax)
         cbar.set_label(f'{displacement_type} ({unit})', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar.set_clim(vmin, vmax)
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
             plt.savefig(save_path, dpi=config.DPI, bbox_inches='tight')
@@ -54,6 +56,8 @@ class Visualizer:
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
         cbar1 = plt.colorbar(contour1, cax=cax1)
         cbar1.set_label('X方向倾斜 (mm/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar1.set_clim(vmin, vmax)
         contour2 = ax2.contourf(xi, yi, tilt_y, levels=levels, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, tilt_y, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8)
@@ -65,6 +69,8 @@ class Visualizer:
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
         cbar2 = plt.colorbar(contour2, cax=cax2)
         cbar2.set_label('Y方向倾斜 (mm/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar2.set_clim(vmin, vmax)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
@@ -88,6 +94,8 @@ class Visualizer:
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
         cbar1 = plt.colorbar(contour1, cax=cax1)
         cbar1.set_label('X方向曲率 (10^-3/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar1.set_clim(vmin, vmax)
         contour2 = ax2.contourf(xi, yi, curvature_y, levels=levels, cmap='viridis', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, curvature_y, levels=contour_lines, colors='white', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8, colors='white')
@@ -99,6 +107,8 @@ class Visualizer:
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
         cbar2 = plt.colorbar(contour2, cax=cax2)
         cbar2.set_label('Y方向曲率 (10^-3/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar2.set_clim(vmin, vmax)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
@@ -122,6 +132,8 @@ class Visualizer:
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
         cbar1 = plt.colorbar(contour1, cax=cax1)
         cbar1.set_label('X方向水平变形 (mm/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar1.set_clim(vmin, vmax)
         contour2 = ax2.contourf(xi, yi, strain_y, levels=levels, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, strain_y, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8)
@@ -133,6 +145,8 @@ class Visualizer:
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
         cbar2 = plt.colorbar(contour2, cax=cax2)
         cbar2.set_label('Y方向水平变形 (mm/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar2.set_clim(vmin, vmax)
         contour3 = ax3.contourf(xi, yi, shear_strain, levels=levels, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines3 = ax3.contour(xi, yi, shear_strain, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax3.clabel(contour_lines3, inline=True, fontsize=8)
@@ -144,6 +158,8 @@ class Visualizer:
         cax3 = divider3.append_axes("right", size="5%", pad=0.1)
         cbar3 = plt.colorbar(contour3, cax=cax3)
         cbar3.set_label('剪切变形 (mm/m)', fontproperties=my_font)
+        if vmin is not None and vmax is not None:
+            cbar3.set_clim(vmin, vmax)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
