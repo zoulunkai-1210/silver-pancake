@@ -17,8 +17,8 @@ def get_chinese_font():
 
 class Visualizer:
     def __init__(self):
-        plt.rcParams['font.family'] = 'serif'
-        plt.rcParams['font.serif'] = ['Times New Roman']
+        # plt.rcParams['font.family'] = 'serif'  # 已注释，避免云端警告
+        # plt.rcParams['font.serif'] = ['Times New Roman']  # 已注释，避免云端警告
         plt.rcParams['axes.unicode_minus'] = False
         plt.rcParams['mathtext.fontset'] = 'stix'
         self.chinese_font = get_chinese_font()
