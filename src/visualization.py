@@ -7,35 +7,14 @@ import config
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.font_manager as fm
 
-# 全局微软雅黑字体设置
+# 明确指定项目内字体文件
 font_path = os.path.join(os.path.dirname(__file__), '..', 'fonts', 'msyh.ttc')
-if os.path.exists(font_path):
-    matplotlib.rcParams['font.sans-serif'] = ['Microsoft YaHei']
-    matplotlib.rcParams['font.family'] = 'sans-serif'
-    matplotlib.rcParams['axes.unicode_minus'] = False
-    matplotlib.rcParams['font.size'] = 12
-    matplotlib.rcParams['pdf.fonttype'] = 42
-    matplotlib.rcParams['ps.fonttype'] = 42
-    matplotlib.rcParams['mathtext.fontset'] = 'stix'
-    my_font = fm.FontProperties(fname=font_path)
-else:
-    my_font = None
-
-def get_chinese_font():
-    # 统一用项目内的 fonts/msyh.ttc，保证云端和本地一致
-    font_path = os.path.join(os.path.dirname(__file__), '..', 'fonts', 'msyh.ttc')
-    if os.path.exists(font_path):
-        return fm.FontProperties(fname=font_path, size=12)
-    else:
-        return None
+my_font = fm.FontProperties(fname=font_path)
 
 class Visualizer:
     def __init__(self):
-        # plt.rcParams['font.family'] = 'serif'  # 已注释，避免云端警告
-        # plt.rcParams['font.serif'] = ['Times New Roman']  # 已注释，避免云端警告
         plt.rcParams['axes.unicode_minus'] = False
         plt.rcParams['mathtext.fontset'] = 'stix'
-        self.chinese_font = get_chinese_font()
 
     def plot_displacement_contour(self, xi, yi, zi, title, filename, displacement_type='位移', unit='mm',
                                  levels=None, vmin=None, vmax=None, contour_lines=10):
