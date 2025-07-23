@@ -21,13 +21,13 @@ class Visualizer:
         if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
             levels = np.linspace(vmin, vmax, N)
-            ticks = np.linspace(vmin, vmax, N)
+            ticks = list(np.linspace(vmin, vmax, N))
         else:
             if levels is None:
                 levels = config.CONTOUR_LEVELS
-                ticks = levels
+                ticks = list(levels)
             else:
-                ticks = levels
+                ticks = list(levels)
         fig, ax = plt.subplots(figsize=config.FIGURE_SIZE, dpi=config.DPI)
         contour = ax.contourf(xi, yi, zi, levels=levels, cmap=config.COLORMAP, vmin=vmin, vmax=vmax)
         contour_lines_obj = ax.contour(xi, yi, zi, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
@@ -52,19 +52,19 @@ class Visualizer:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
             levels1 = np.linspace(vmin, vmax, N)
             levels2 = np.linspace(vmin, vmax, N)
-            ticks1 = np.linspace(vmin, vmax, N)
-            ticks2 = np.linspace(vmin, vmax, N)
+            ticks1 = list(np.linspace(vmin, vmax, N))
+            ticks2 = list(np.linspace(vmin, vmax, N))
         else:
             if levels is None:
                 levels1 = config.CONTOUR_LEVELS
                 levels2 = config.CONTOUR_LEVELS
-                ticks1 = levels1
-                ticks2 = levels2
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
             else:
                 levels1 = np.array(levels)
                 levels2 = np.array(levels)
-                ticks1 = levels1
-                ticks2 = levels2
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), dpi=config.DPI)
         contour1 = ax1.contourf(xi, yi, tilt_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, tilt_x, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
@@ -101,19 +101,19 @@ class Visualizer:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
             levels1 = np.linspace(vmin, vmax, N)
             levels2 = np.linspace(vmin, vmax, N)
-            ticks1 = np.linspace(vmin, vmax, N)
-            ticks2 = np.linspace(vmin, vmax, N)
+            ticks1 = list(np.linspace(vmin, vmax, N))
+            ticks2 = list(np.linspace(vmin, vmax, N))
         else:
             if levels is None:
                 levels1 = config.CONTOUR_LEVELS
                 levels2 = config.CONTOUR_LEVELS
-                ticks1 = levels1
-                ticks2 = levels2
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
             else:
                 levels1 = np.array(levels)
                 levels2 = np.array(levels)
-                ticks1 = levels1
-                ticks2 = levels2
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), dpi=config.DPI)
         contour1 = ax1.contourf(xi, yi, curvature_x, levels=levels1, cmap='viridis', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, curvature_x, levels=contour_lines, colors='white', linewidths=0.5, alpha=0.7)
@@ -151,24 +151,24 @@ class Visualizer:
             levels1 = np.linspace(vmin, vmax, N)
             levels2 = np.linspace(vmin, vmax, N)
             levels3 = np.linspace(vmin, vmax, N)
-            ticks1 = np.linspace(vmin, vmax, N)
-            ticks2 = np.linspace(vmin, vmax, N)
-            ticks3 = np.linspace(vmin, vmax, N)
+            ticks1 = list(np.linspace(vmin, vmax, N))
+            ticks2 = list(np.linspace(vmin, vmax, N))
+            ticks3 = list(np.linspace(vmin, vmax, N))
         else:
             if levels is None:
                 levels1 = config.CONTOUR_LEVELS
                 levels2 = config.CONTOUR_LEVELS
                 levels3 = config.CONTOUR_LEVELS
-                ticks1 = levels1
-                ticks2 = levels2
-                ticks3 = levels3
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
+                ticks3 = list(levels3)
             else:
                 levels1 = np.array(levels)
                 levels2 = np.array(levels)
                 levels3 = np.array(levels)
-                ticks1 = levels1
-                ticks2 = levels2
-                ticks3 = levels3
+                ticks1 = list(levels1)
+                ticks2 = list(levels2)
+                ticks3 = list(levels3)
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 6), dpi=config.DPI)
         contour1 = ax1.contourf(xi, yi, strain_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, strain_x, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
