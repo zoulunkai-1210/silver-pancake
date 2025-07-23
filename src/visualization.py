@@ -5,15 +5,13 @@ import numpy as np
 import os
 import config
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib.font_manager import FontProperties
+import matplotlib.font_manager as fm
 
 def get_chinese_font():
-    yahei = 'C:/Windows/Fonts/msyh.ttc'
-    simsun = 'C:/Windows/Fonts/simsun.ttc'
-    if os.path.exists(yahei):
-        return FontProperties(fname=yahei, size=12)
-    elif os.path.exists(simsun):
-        return FontProperties(fname=simsun, size=12)
+    # 统一用项目内的 fonts/msyh.ttc，保证云端和本地一致
+    font_path = os.path.join(os.path.dirname(__file__), '..', 'fonts', 'msyh.ttc')
+    if os.path.exists(font_path):
+        return fm.FontProperties(fname=font_path, size=12)
     else:
         return None
 
