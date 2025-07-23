@@ -18,14 +18,18 @@ class Visualizer:
 
     def plot_displacement_contour(self, xi, yi, zi, title, filename, displacement_type='位移', unit='mm',
                                  levels=None, vmin=None, vmax=None, contour_lines=10):
-        zmin, zmax = np.nanmin(zi), np.nanmax(zi)
-        if levels is None:
+        if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
-            levels = np.linspace(zmin, zmax, N)
+            levels = np.linspace(vmin, vmax, N)
+            ticks = np.linspace(vmin, vmax, N)
         else:
-            levels = np.array(levels)
+            if levels is None:
+                levels = config.CONTOUR_LEVELS
+                ticks = levels
+            else:
+                ticks = levels
         fig, ax = plt.subplots(figsize=config.FIGURE_SIZE, dpi=config.DPI)
-        contour = ax.contourf(xi, yi, zi, levels=levels, cmap=config.COLORMAP, vmin=vmin, vmax=vmax, extend='both')
+        contour = ax.contourf(xi, yi, zi, levels=levels, cmap=config.COLORMAP, vmin=vmin, vmax=vmax)
         contour_lines_obj = ax.contour(xi, yi, zi, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax.clabel(contour_lines_obj, inline=True, fontsize=8)
         ax.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -34,7 +38,7 @@ class Visualizer:
         ax.set_aspect('equal')
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1)
-        cbar = plt.colorbar(contour, cax=cax)
+        cbar = plt.colorbar(contour, cax=cax, ticks=ticks)
         cbar.set_label(f'{displacement_type} ({unit})', fontproperties=my_font)
         for fmt in config.SAVE_FORMATS:
             save_path = os.path.join(config.RESULTS_DIR, f'{filename}.{fmt}')
@@ -44,17 +48,25 @@ class Visualizer:
 
     def plot_tilt_contour(self, xi, yi, tilt_x, tilt_y, filename,
                          levels=None, vmin=None, vmax=None, contour_lines=10):
-        zmin1, zmax1 = np.nanmin(tilt_x), np.nanmax(tilt_x)
-        zmin2, zmax2 = np.nanmin(tilt_y), np.nanmax(tilt_y)
-        if levels is None:
+        if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
-            levels1 = np.linspace(zmin1, zmax1, N)
-            levels2 = np.linspace(zmin2, zmax2, N)
+            levels1 = np.linspace(vmin, vmax, N)
+            levels2 = np.linspace(vmin, vmax, N)
+            ticks1 = np.linspace(vmin, vmax, N)
+            ticks2 = np.linspace(vmin, vmax, N)
         else:
-            levels1 = np.array(levels)
-            levels2 = np.array(levels)
+            if levels is None:
+                levels1 = config.CONTOUR_LEVELS
+                levels2 = config.CONTOUR_LEVELS
+                ticks1 = levels1
+                ticks2 = levels2
+            else:
+                levels1 = np.array(levels)
+                levels2 = np.array(levels)
+                ticks1 = levels1
+                ticks2 = levels2
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), dpi=config.DPI)
-        contour1 = ax1.contourf(xi, yi, tilt_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax, extend='both')
+        contour1 = ax1.contourf(xi, yi, tilt_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, tilt_x, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax1.clabel(contour_lines1, inline=True, fontsize=8)
         ax1.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -63,9 +75,9 @@ class Visualizer:
         ax1.set_aspect('equal')
         divider1 = make_axes_locatable(ax1)
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
-        cbar1 = plt.colorbar(contour1, cax=cax1)
+        cbar1 = plt.colorbar(contour1, cax=cax1, ticks=ticks1)
         cbar1.set_label('X方向倾斜 (mm/m)', fontproperties=my_font)
-        contour2 = ax2.contourf(xi, yi, tilt_y, levels=levels2, cmap='RdBu_r', vmin=vmin, vmax=vmax, extend='both')
+        contour2 = ax2.contourf(xi, yi, tilt_y, levels=levels2, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, tilt_y, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8)
         ax2.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -74,7 +86,7 @@ class Visualizer:
         ax2.set_aspect('equal')
         divider2 = make_axes_locatable(ax2)
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
-        cbar2 = plt.colorbar(contour2, cax=cax2)
+        cbar2 = plt.colorbar(contour2, cax=cax2, ticks=ticks2)
         cbar2.set_label('Y方向倾斜 (mm/m)', fontproperties=my_font)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
@@ -85,17 +97,25 @@ class Visualizer:
 
     def plot_curvature_contour(self, xi, yi, curvature_x, curvature_y, filename,
                               levels=None, vmin=None, vmax=None, contour_lines=10):
-        zmin1, zmax1 = np.nanmin(curvature_x), np.nanmax(curvature_x)
-        zmin2, zmax2 = np.nanmin(curvature_y), np.nanmax(curvature_y)
-        if levels is None:
+        if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
-            levels1 = np.linspace(zmin1, zmax1, N)
-            levels2 = np.linspace(zmin2, zmax2, N)
+            levels1 = np.linspace(vmin, vmax, N)
+            levels2 = np.linspace(vmin, vmax, N)
+            ticks1 = np.linspace(vmin, vmax, N)
+            ticks2 = np.linspace(vmin, vmax, N)
         else:
-            levels1 = np.array(levels)
-            levels2 = np.array(levels)
+            if levels is None:
+                levels1 = config.CONTOUR_LEVELS
+                levels2 = config.CONTOUR_LEVELS
+                ticks1 = levels1
+                ticks2 = levels2
+            else:
+                levels1 = np.array(levels)
+                levels2 = np.array(levels)
+                ticks1 = levels1
+                ticks2 = levels2
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), dpi=config.DPI)
-        contour1 = ax1.contourf(xi, yi, curvature_x, levels=levels1, cmap='viridis', vmin=vmin, vmax=vmax, extend='both')
+        contour1 = ax1.contourf(xi, yi, curvature_x, levels=levels1, cmap='viridis', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, curvature_x, levels=contour_lines, colors='white', linewidths=0.5, alpha=0.7)
         ax1.clabel(contour_lines1, inline=True, fontsize=8, colors='white')
         ax1.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -104,9 +124,9 @@ class Visualizer:
         ax1.set_aspect('equal')
         divider1 = make_axes_locatable(ax1)
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
-        cbar1 = plt.colorbar(contour1, cax=cax1)
+        cbar1 = plt.colorbar(contour1, cax=cax1, ticks=ticks1)
         cbar1.set_label('X方向曲率 (10^-3/m)', fontproperties=my_font)
-        contour2 = ax2.contourf(xi, yi, curvature_y, levels=levels2, cmap='viridis', vmin=vmin, vmax=vmax, extend='both')
+        contour2 = ax2.contourf(xi, yi, curvature_y, levels=levels2, cmap='viridis', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, curvature_y, levels=contour_lines, colors='white', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8, colors='white')
         ax2.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -115,7 +135,7 @@ class Visualizer:
         ax2.set_aspect('equal')
         divider2 = make_axes_locatable(ax2)
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
-        cbar2 = plt.colorbar(contour2, cax=cax2)
+        cbar2 = plt.colorbar(contour2, cax=cax2, ticks=ticks2)
         cbar2.set_label('Y方向曲率 (10^-3/m)', fontproperties=my_font)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
@@ -126,20 +146,31 @@ class Visualizer:
 
     def plot_strain_contour(self, xi, yi, strain_x, strain_y, shear_strain, filename,
                             levels=None, vmin=None, vmax=None, contour_lines=10):
-        zmin1, zmax1 = np.nanmin(strain_x), np.nanmax(strain_x)
-        zmin2, zmax2 = np.nanmin(strain_y), np.nanmax(strain_y)
-        zmin3, zmax3 = np.nanmin(shear_strain), np.nanmax(shear_strain)
-        if levels is None:
+        if vmin is not None and vmax is not None:
             N = config.CONTOUR_LEVELS if isinstance(config.CONTOUR_LEVELS, int) else len(config.CONTOUR_LEVELS)
-            levels1 = np.linspace(zmin1, zmax1, N)
-            levels2 = np.linspace(zmin2, zmax2, N)
-            levels3 = np.linspace(zmin3, zmax3, N)
+            levels1 = np.linspace(vmin, vmax, N)
+            levels2 = np.linspace(vmin, vmax, N)
+            levels3 = np.linspace(vmin, vmax, N)
+            ticks1 = np.linspace(vmin, vmax, N)
+            ticks2 = np.linspace(vmin, vmax, N)
+            ticks3 = np.linspace(vmin, vmax, N)
         else:
-            levels1 = np.array(levels)
-            levels2 = np.array(levels)
-            levels3 = np.array(levels)
+            if levels is None:
+                levels1 = config.CONTOUR_LEVELS
+                levels2 = config.CONTOUR_LEVELS
+                levels3 = config.CONTOUR_LEVELS
+                ticks1 = levels1
+                ticks2 = levels2
+                ticks3 = levels3
+            else:
+                levels1 = np.array(levels)
+                levels2 = np.array(levels)
+                levels3 = np.array(levels)
+                ticks1 = levels1
+                ticks2 = levels2
+                ticks3 = levels3
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 6), dpi=config.DPI)
-        contour1 = ax1.contourf(xi, yi, strain_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax, extend='both')
+        contour1 = ax1.contourf(xi, yi, strain_x, levels=levels1, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines1 = ax1.contour(xi, yi, strain_x, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax1.clabel(contour_lines1, inline=True, fontsize=8)
         ax1.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -148,9 +179,9 @@ class Visualizer:
         ax1.set_aspect('equal')
         divider1 = make_axes_locatable(ax1)
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
-        cbar1 = plt.colorbar(contour1, cax=cax1)
+        cbar1 = plt.colorbar(contour1, cax=cax1, ticks=ticks1)
         cbar1.set_label('X方向水平变形 (mm/m)', fontproperties=my_font)
-        contour2 = ax2.contourf(xi, yi, strain_y, levels=levels2, cmap='RdBu_r', vmin=vmin, vmax=vmax, extend='both')
+        contour2 = ax2.contourf(xi, yi, strain_y, levels=levels2, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines2 = ax2.contour(xi, yi, strain_y, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax2.clabel(contour_lines2, inline=True, fontsize=8)
         ax2.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -159,9 +190,9 @@ class Visualizer:
         ax2.set_aspect('equal')
         divider2 = make_axes_locatable(ax2)
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
-        cbar2 = plt.colorbar(contour2, cax=cax2)
+        cbar2 = plt.colorbar(contour2, cax=cax2, ticks=ticks2)
         cbar2.set_label('Y方向水平变形 (mm/m)', fontproperties=my_font)
-        contour3 = ax3.contourf(xi, yi, shear_strain, levels=levels3, cmap='RdBu_r', vmin=vmin, vmax=vmax, extend='both')
+        contour3 = ax3.contourf(xi, yi, shear_strain, levels=levels3, cmap='RdBu_r', vmin=vmin, vmax=vmax)
         contour_lines3 = ax3.contour(xi, yi, shear_strain, levels=contour_lines, colors='black', linewidths=0.5, alpha=0.7)
         ax3.clabel(contour_lines3, inline=True, fontsize=8)
         ax3.set_xlabel('X 坐标 (m)', fontproperties=my_font)
@@ -170,7 +201,7 @@ class Visualizer:
         ax3.set_aspect('equal')
         divider3 = make_axes_locatable(ax3)
         cax3 = divider3.append_axes("right", size="5%", pad=0.1)
-        cbar3 = plt.colorbar(contour3, cax=cax3)
+        cbar3 = plt.colorbar(contour3, cax=cax3, ticks=ticks3)
         cbar3.set_label('剪切变形 (mm/m)', fontproperties=my_font)
         plt.tight_layout()
         for fmt in config.SAVE_FORMATS:
