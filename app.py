@@ -85,15 +85,20 @@ if st.session_state.get('data_ready', False):
 
     # X方向位移
     with st.expander("X方向位移云图", expanded=True):
+        x_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="x_auto_saturate")
+        if x_auto_saturate:
+            x_vmin_auto = float(np.nanpercentile(dx_grid, 1))
+            x_vmax_auto = float(np.nanpercentile(dx_grid, 99))
+        else:
+            x_vmin_auto = float(np.nanmin(dx_grid))
+            x_vmax_auto = float(np.nanmax(dx_grid))
+        x_vmin = st.number_input("色阶最小值", value=x_vmin_auto, key="x_vmin")
+        x_vmax = st.number_input("色阶最大值", value=x_vmax_auto, key="x_vmax")
         x_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="x_contour_lines")
-        x_vmin = st.number_input("色阶最小值", value=float('nan'), key="x_vmin")
-        x_vmax = st.number_input("色阶最大值", value=float('nan'), key="x_vmax")
         if st.button("生成X方向位移云图"):
             visualizer.plot_displacement_contour(
                 xi_grid, yi_grid, dx_grid, "X方向位移", "displacement_x", "X方向位移", "mm",
-                vmin=None if np.isnan(x_vmin) else x_vmin,
-                vmax=None if np.isnan(x_vmax) else x_vmax,
-                contour_lines=x_contour_lines
+                vmin=x_vmin, vmax=x_vmax, contour_lines=x_contour_lines
             )
             img_path = os.path.join(img_dir, "displacement_x.png")
             if os.path.exists(img_path):
@@ -103,15 +108,20 @@ if st.session_state.get('data_ready', False):
 
     # Y方向位移
     with st.expander("Y方向位移云图", expanded=False):
+        y_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="y_auto_saturate")
+        if y_auto_saturate:
+            y_vmin_auto = float(np.nanpercentile(dy_grid, 1))
+            y_vmax_auto = float(np.nanpercentile(dy_grid, 99))
+        else:
+            y_vmin_auto = float(np.nanmin(dy_grid))
+            y_vmax_auto = float(np.nanmax(dy_grid))
+        y_vmin = st.number_input("色阶最小值", value=y_vmin_auto, key="y_vmin")
+        y_vmax = st.number_input("色阶最大值", value=y_vmax_auto, key="y_vmax")
         y_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="y_contour_lines")
-        y_vmin = st.number_input("色阶最小值", value=float('nan'), key="y_vmin")
-        y_vmax = st.number_input("色阶最大值", value=float('nan'), key="y_vmax")
         if st.button("生成Y方向位移云图"):
             visualizer.plot_displacement_contour(
                 xi_grid, yi_grid, dy_grid, "Y方向位移", "displacement_y", "Y方向位移", "mm",
-                vmin=None if np.isnan(y_vmin) else y_vmin,
-                vmax=None if np.isnan(y_vmax) else y_vmax,
-                contour_lines=y_contour_lines
+                vmin=y_vmin, vmax=y_vmax, contour_lines=y_contour_lines
             )
             img_path = os.path.join(img_dir, "displacement_y.png")
             if os.path.exists(img_path):
@@ -121,15 +131,20 @@ if st.session_state.get('data_ready', False):
 
     # Z方向位移
     with st.expander("Z方向位移云图", expanded=False):
+        z_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="z_auto_saturate")
+        if z_auto_saturate:
+            z_vmin_auto = float(np.nanpercentile(dz_grid, 1))
+            z_vmax_auto = float(np.nanpercentile(dz_grid, 99))
+        else:
+            z_vmin_auto = float(np.nanmin(dz_grid))
+            z_vmax_auto = float(np.nanmax(dz_grid))
+        z_vmin = st.number_input("色阶最小值", value=z_vmin_auto, key="z_vmin")
+        z_vmax = st.number_input("色阶最大值", value=z_vmax_auto, key="z_vmax")
         z_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="z_contour_lines")
-        z_vmin = st.number_input("色阶最小值", value=float('nan'), key="z_vmin")
-        z_vmax = st.number_input("色阶最大值", value=float('nan'), key="z_vmax")
         if st.button("生成Z方向位移云图"):
             visualizer.plot_displacement_contour(
                 xi_grid, yi_grid, dz_grid, "Z方向位移", "displacement_z", "Z方向位移", "mm",
-                vmin=None if np.isnan(z_vmin) else z_vmin,
-                vmax=None if np.isnan(z_vmax) else z_vmax,
-                contour_lines=z_contour_lines
+                vmin=z_vmin, vmax=z_vmax, contour_lines=z_contour_lines
             )
             img_path = os.path.join(img_dir, "displacement_z.png")
             if os.path.exists(img_path):
@@ -139,15 +154,20 @@ if st.session_state.get('data_ready', False):
 
     # 倾斜变形
     with st.expander("倾斜变形云图", expanded=False):
+        tilt_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="tilt_auto_saturate")
+        if tilt_auto_saturate:
+            tilt_vmin_auto = float(np.nanpercentile(np.concatenate([tilt_x.flatten(), tilt_y.flatten()]), 1))
+            tilt_vmax_auto = float(np.nanpercentile(np.concatenate([tilt_x.flatten(), tilt_y.flatten()]), 99))
+        else:
+            tilt_vmin_auto = float(np.nanmin([np.nanmin(tilt_x), np.nanmin(tilt_y)]))
+            tilt_vmax_auto = float(np.nanmax([np.nanmax(tilt_x), np.nanmax(tilt_y)]))
+        tilt_vmin = st.number_input("色阶最小值", value=tilt_vmin_auto, key="tilt_vmin")
+        tilt_vmax = st.number_input("色阶最大值", value=tilt_vmax_auto, key="tilt_vmax")
         tilt_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="tilt_contour_lines")
-        tilt_vmin = st.number_input("色阶最小值", value=float('nan'), key="tilt_vmin")
-        tilt_vmax = st.number_input("色阶最大值", value=float('nan'), key="tilt_vmax")
         if st.button("生成倾斜变形云图"):
             visualizer.plot_tilt_contour(
                 xi_grid, yi_grid, tilt_x, tilt_y, "surface_tilt",
-                vmin=None if np.isnan(tilt_vmin) else tilt_vmin,
-                vmax=None if np.isnan(tilt_vmax) else tilt_vmax,
-                contour_lines=tilt_contour_lines
+                vmin=tilt_vmin, vmax=tilt_vmax, contour_lines=tilt_contour_lines
             )
             img_path = os.path.join(img_dir, "surface_tilt.png")
             if os.path.exists(img_path):
@@ -157,15 +177,20 @@ if st.session_state.get('data_ready', False):
 
     # 曲率
     with st.expander("曲率云图", expanded=False):
+        curv_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="curv_auto_saturate")
+        if curv_auto_saturate:
+            curv_vmin_auto = float(np.nanpercentile(np.concatenate([curvature_x.flatten(), curvature_y.flatten()]), 1))
+            curv_vmax_auto = float(np.nanpercentile(np.concatenate([curvature_x.flatten(), curvature_y.flatten()]), 99))
+        else:
+            curv_vmin_auto = float(np.nanmin([np.nanmin(curvature_x), np.nanmin(curvature_y)]))
+            curv_vmax_auto = float(np.nanmax([np.nanmax(curvature_x), np.nanmax(curvature_y)]))
+        curv_vmin = st.number_input("色阶最小值", value=curv_vmin_auto, key="curv_vmin")
+        curv_vmax = st.number_input("色阶最大值", value=curv_vmax_auto, key="curv_vmax")
         curv_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="curv_contour_lines")
-        curv_vmin = st.number_input("色阶最小值", value=float('nan'), key="curv_vmin")
-        curv_vmax = st.number_input("色阶最大值", value=float('nan'), key="curv_vmax")
         if st.button("生成曲率云图"):
             visualizer.plot_curvature_contour(
                 xi_grid, yi_grid, curvature_x, curvature_y, "surface_curvature",
-                vmin=None if np.isnan(curv_vmin) else curv_vmin,
-                vmax=None if np.isnan(curv_vmax) else curv_vmax,
-                contour_lines=curv_contour_lines
+                vmin=curv_vmin, vmax=curv_vmax, contour_lines=curv_contour_lines
             )
             img_path = os.path.join(img_dir, "surface_curvature.png")
             if os.path.exists(img_path):
@@ -175,15 +200,20 @@ if st.session_state.get('data_ready', False):
 
     # 水平变形
     with st.expander("水平变形云图", expanded=False):
+        strain_auto_saturate = st.checkbox("自动色阶饱和（1%~99%分位数）", value=True, key="strain_auto_saturate")
+        if strain_auto_saturate:
+            strain_vmin_auto = float(np.nanpercentile(np.concatenate([strain_x.flatten(), strain_y.flatten(), shear_strain.flatten()]), 1))
+            strain_vmax_auto = float(np.nanpercentile(np.concatenate([strain_x.flatten(), strain_y.flatten(), shear_strain.flatten()]), 99))
+        else:
+            strain_vmin_auto = float(np.nanmin([np.nanmin(strain_x), np.nanmin(strain_y), np.nanmin(shear_strain)]))
+            strain_vmax_auto = float(np.nanmax([np.nanmax(strain_x), np.nanmax(strain_y), np.nanmax(shear_strain)]))
+        strain_vmin = st.number_input("色阶最小值", value=strain_vmin_auto, key="strain_vmin")
+        strain_vmax = st.number_input("色阶最大值", value=strain_vmax_auto, key="strain_vmax")
         strain_contour_lines = st.slider("线型等高线数量", 2, 30, 10, key="strain_contour_lines")
-        strain_vmin = st.number_input("色阶最小值", value=float('nan'), key="strain_vmin")
-        strain_vmax = st.number_input("色阶最大值", value=float('nan'), key="strain_vmax")
         if st.button("生成水平变形云图"):
             visualizer.plot_strain_contour(
                 xi_grid, yi_grid, strain_x, strain_y, shear_strain, "horizontal_strain",
-                vmin=None if np.isnan(strain_vmin) else strain_vmin,
-                vmax=None if np.isnan(strain_vmax) else strain_vmax,
-                contour_lines=strain_contour_lines
+                vmin=strain_vmin, vmax=strain_vmax, contour_lines=strain_contour_lines
             )
             img_path = os.path.join(img_dir, "horizontal_strain.png")
             if os.path.exists(img_path):
